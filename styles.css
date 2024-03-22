@@ -1,0 +1,24 @@
+body {
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #111111;
+  user-select: none;
+}
+
+#cps-counter {
+  font-size: 6rem;
+  color: #ffffff;
+  font-family: Arial, sans-serif;
+  text-align: center;
+}
+
+#github-icon {
+  width: 32px;
+  height: 32px;
+  margin-top: 20px;
+  user-select: none;
+}
