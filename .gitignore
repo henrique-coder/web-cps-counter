@@ -4,10 +4,10 @@
 __pycache__
 
 # Directories
-# ...
+.debug
 
 # Files
 # ...
 
 # Extensions
-# ...
+*.env
