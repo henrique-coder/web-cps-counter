@@ -7,6 +7,21 @@ const clickWindows = {
 const scrollEvents = [];
 const WINDOW_SIZE = 1000;
 
+const maxScores = {
+    left: parseFloat(localStorage.getItem('maxLeft') || '0'),
+    right: parseFloat(localStorage.getItem('maxRight') || '0'),
+    scroll: parseFloat(localStorage.getItem('maxScroll') || '0'),
+    total: parseFloat(localStorage.getItem('maxTotal') || '0')
+};
+
+function updateMax(type, value) {
+    if (value > maxScores[type]) {
+        maxScores[type] = value;
+        localStorage.setItem(`max${type.charAt(0).toUpperCase() + type.slice(1)}`, value.toString());
+        document.getElementById(`${type}-max`).textContent = value.toFixed(1);
+    }
+}
+
 function calculateCPS(buttonClicks) {
     const now = performance.now();
     while (buttonClicks.length > 0 && now - buttonClicks[0] > WINDOW_SIZE) {
@@ -51,6 +66,11 @@ document.addEventListener('wheel', (event) => {
     lastScrollDelta = event.deltaY;
 }, { passive: true });
 
+document.getElementById('left-max').textContent = maxScores.left.toFixed(1);
+document.getElementById('right-max').textContent = maxScores.right.toFixed(1);
+document.getElementById('scroll-max').textContent = maxScores.scroll.toFixed(1);
+document.getElementById('total-max').textContent = maxScores.total.toFixed(1);
+
 function updateDisplay() {
     const leftCPS = calculateCPS(clickWindows.left);
     const rightCPS = calculateCPS(clickWindows.right);
@@ -63,6 +83,11 @@ function updateDisplay() {
     document.getElementById('total-counter').innerText = totalCPS.toFixed(1) + ' CPS';
     document.getElementById('scroll-counter').innerText = scrollCPS.toFixed(1) + ' CPS';
     document.getElementById('scroll-speed').innerText = scrollSpeed + ' px/s';
+
+    updateMax('left', leftCPS);
+    updateMax('right', rightCPS);
+    updateMax('scroll', scrollCPS);
+    updateMax('total', totalCPS);
 
     const directionElement = document.getElementById('scroll-direction');
     if (lastScrollDelta > 0) {

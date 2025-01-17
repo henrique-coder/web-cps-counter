@@ -95,3 +95,17 @@ body {
   margin-top: 20px;
   user-select: none;
 }
+
+.max-counter {
+  color: #ff4a4a;
+  font-size: 1rem;
+  font-family: Arial, sans-serif;
+  margin-top: 0.5rem;
+  opacity: 0.8;
+  letter-spacing: 1px;
+}
+
+.scroll-info .max-counter {
+  font-size: 0.9rem;
+  margin-top: 0.3rem;
+}
