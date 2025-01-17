@@ -1,19 +1,34 @@
-let clicks = 0;
-let startTime = Date.now();
+const clickWindows = {
+    left: [],
+    right: []
+};
 
-document.addEventListener('mousedown', () => {
-	clicks++;
-});
+const WINDOW_SIZE = 1000;
+const UPDATE_RATE = 16;
 
-setInterval(() => {
-	const elapsedTime = (Date.now() - startTime) / 1000;
-	const cps = clicks / elapsedTime;
-	document.getElementById('cps-counter').innerText = cps.toFixed(1) + ' CPS';
-}, 100);
+function calculateCPS(buttonClicks) {
+    const now = performance.now();
+    while (buttonClicks.length > 0 && now - buttonClicks[0] > WINDOW_SIZE) {
+        buttonClicks.shift();
+    }
+    return buttonClicks.length;
+}
 
-setInterval(() => {
-	if ((Date.now() - startTime) / 1000 > 2) {
-		clicks = 0;
-		startTime = Date.now();
-	}
-}, 2000);
+document.addEventListener('mousedown', (event) => {
+    const timestamp = performance.now();
+    if (event.button === 0) {
+        clickWindows.left.push(timestamp);
+    } else if (event.button === 2) {
+        clickWindows.right.push(timestamp);
+    }
+}, { passive: true });
+
+function updateDisplay() {
+    const leftCPS = calculateCPS(clickWindows.left);
+    const totalCPS = Math.max(leftCPS, 0);
+
+    document.getElementById('cps-counter').innerText = totalCPS.toFixed(1) + ' CPS';
+    requestAnimationFrame(updateDisplay);
+}
+
+requestAnimationFrame(updateDisplay);
