@@ -4,7 +4,6 @@ const clickWindows = {
 };
 
 const WINDOW_SIZE = 1000;
-const UPDATE_RATE = 16;
 
 function calculateCPS(buttonClicks) {
     const now = performance.now();
@@ -25,9 +24,13 @@ document.addEventListener('mousedown', (event) => {
 
 function updateDisplay() {
     const leftCPS = calculateCPS(clickWindows.left);
-    const totalCPS = Math.max(leftCPS, 0);
+    const rightCPS = calculateCPS(clickWindows.right);
+    const totalCPS = leftCPS + rightCPS;
 
-    document.getElementById('cps-counter').innerText = totalCPS.toFixed(1) + ' CPS';
+    document.getElementById('left-counter').innerText = leftCPS.toFixed(1) + ' CPS';
+    document.getElementById('right-counter').innerText = rightCPS.toFixed(1) + ' CPS';
+    document.getElementById('total-counter').innerText = totalCPS.toFixed(1) + ' CPS';
+
     requestAnimationFrame(updateDisplay);
 }
 

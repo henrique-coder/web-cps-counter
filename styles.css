@@ -7,13 +7,57 @@ body {
   align-items: center;
   background-color: #111111;
   user-select: none;
+  overflow: hidden;
 }
 
-#cps-counter {
-  font-size: 6rem;
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  gap: 2rem;
+}
+
+.panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 300px;
+  max-width: 400px;
+  background-color: #1a1a1a;
+  border-radius: 15px;
+  transition: background-color 0.3s;
+}
+
+.left-panel:active {
+  background-color: #232323;
+}
+
+.right-panel:active {
+  background-color: #232323;
+}
+
+.center-panel {
+  padding: 2rem;
+  background-color: #1a1a1a;
+  border-radius: 15px;
+  text-align: center;
+}
+
+#left-counter, #right-counter, #total-counter {
+  font-size: 4rem;
   color: #ffffff;
   font-family: Arial, sans-serif;
   text-align: center;
+}
+
+.label {
+  color: #666666;
+  font-family: Arial, sans-serif;
+  margin-top: 1rem;
+  font-size: 1.2rem;
 }
 
 #github-icon {
