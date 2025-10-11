@@ -1,10 +1,11 @@
 # IDE
 .idea
-.venv
-__pycache__
+
+# Cache
+# ...
 
 # Directories
-.internal
+# ...
 
 # Files
 # ...
