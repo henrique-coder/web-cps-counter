@@ -1,0 +1,25 @@
+{
+  "name": "cps-counter",
+  "private": true,
+  "version": "2.0.0",
+  "type": "module",
+  "description": "A modern, fast, and accurate clicks per second counter",
+  "author": "henrique-coder",
+  "license": "GPL-3.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/henrique-coder/web-cps-counter"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "vue": "^3.5.24"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^6.0.1",
+    "vite": "^7.2.4"
+  }
+}

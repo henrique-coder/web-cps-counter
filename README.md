@@ -1,61 +1,51 @@
-<h2 align="center">Web CPS Counter</h2>
+<div align="center">
+  <img src="public/logo.svg" alt="CPS Counter" width="80" height="80">
+  <h1>CPS Counter</h1>
+  <p>A modern, fast, and accurate clicks per second counter</p>
 
-<p align="center">
-    <img src="assets/favicon.png" alt="favicon" width="64" height="64">
-</p>
+  <p>
+    <img src="https://img.shields.io/github/created-at/henrique-coder/web-cps-counter?style=flat-square&logoColor=white&labelColor=0a0a0a&color=3b82f6" alt="Created At">
+    <img src="https://img.shields.io/github/last-commit/henrique-coder/web-cps-counter?style=flat-square&logoColor=white&labelColor=0a0a0a&color=22c55e" alt="Last Commit">
+    <img src="https://img.shields.io/github/license/henrique-coder/web-cps-counter?style=flat-square&logoColor=white&labelColor=0a0a0a&color=ef4444" alt="License">
+  </p>
+</div>
 
-<br>
+## Features
 
-<p align="center">
-    <img src="https://img.shields.io/github/created-at/henrique-coder/web-cps-counter?style=for-the-badge&logoColor=white&labelColor=gray&color=white" alt="GitHub Created At">
-    <img src="https://img.shields.io/github/commit-activity/m/henrique-coder/web-cps-counter?style=for-the-badge&logoColor=white&labelColor=gray&color=white" alt="GitHub commit activity">
-    <img src="https://img.shields.io/github/last-commit/henrique-coder/web-cps-counter?style=for-the-badge&logoColor=white&labelColor=gray&color=white" alt="GitHub last commit">
-</p>
+- Real-time CPS tracking for left click, right click, and scroll
+- Maximum scores saved locally in your browser
+- Share your best scores as a beautiful image
+- Fully responsive for all devices
+- No external tracking or analytics
+- Fast and lightweight
 
-<p align="center">
-    An accurate, simple and lightweight static website for those who want to know how many clicks per second they are making. 
-</p>
+## Tech Stack
 
-<br>
+- [Vue 3](https://vuejs.org/) with Composition API
+- [Vite](https://vite.dev/) for blazing fast development
+- Modern CSS with CSS Variables
+- LocalStorage for persistent data
 
-#### Features
-
-- Built with [HTML5](https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/HTML5), [CSS3](https://developer.mozilla.org/en-US/docs/Web/CSS) and [JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript).
-
-#### Prerequisites
-
-- Any browser that supports HTML5, CSS3 and JavaScript.
-
-### Installation from source code
+## Getting Started
 
 ```bash
-# 1. Clone the repository
 git clone https://github.com/henrique-coder/web-cps-counter.git
-
-# 2. Change the directory
 cd web-cps-counter
-
-# 3. Open the index.html file in your browser
-
-# 4. Enjoy! 🎉
+npm install
+npm run dev
 ```
 
-### Contributing
+## Build
 
-Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+```bash
+npm run build
+npm run preview
+```
 
-If you have any suggestions that could improve this project, please [fork](https://github.com/henrique-coder/web-cps-counter/fork) the repository and open a pull request. Or simply open an [issue](https://github.com/henrique-coder/web-cps-counter/issues/new) and describe your ideas or let us know what bugs you've found. Don't forget to give the project a star. Thanks again!
+## Contributing
 
-1. Fork the project at https://github.com/henrique-coder/web-cps-counter/fork
-2. Create your feature branch ・ `git checkout -b feature/{feature_name}`
-3. Commit your changes ・ `git commit -m "{commit_message}"`
-4. Push to the branch ・ `git push origin feature/{feature_name}`
-5. Open a pull request describing the changes made and detailing the new feature. Then wait for an administrator to review it and you're done!
+Contributions are welcome! Feel free to [open an issue](https://github.com/henrique-coder/web-cps-counter/issues/new) or submit a pull request.
 
-### License
+## License
 
-Distributed under the **GNU General Public License v3.0**. See [LICENSE](https://github.com/henrique-coder/web-cps-counter/blob/main/LICENSE) for more information.
-
-### Disclaimer
-
-Please note that this project is still under development and may contain errors or incomplete functionality. If you encounter any problems, feel free to open an [issue](https://github.com/henrique-coder/web-cps-counter/issues/new) and describe the problem you are facing. Your feedback is very important to us.
+[GNU General Public License v3.0](LICENSE)

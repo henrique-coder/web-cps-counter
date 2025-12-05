@@ -1,14 +1,15 @@
 # IDE
-.idea
+.idea/
 
 # Cache
-# ...
+node_modules/
 
 # Directories
-# ...
+.debug/
 
 # Files
 # ...
 
 # Extensions
 *.env
+*.log
