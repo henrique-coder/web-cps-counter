@@ -3,6 +3,8 @@
 
 # Cache
 node_modules/
+dist/
+.astro/
 
 # Directories
 .debug/

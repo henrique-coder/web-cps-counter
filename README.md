@@ -13,18 +13,40 @@
 ## Features
 
 - Real-time CPS tracking for left click, right click, and scroll
-- Maximum scores saved locally in your browser
-- Share your best scores as a beautiful image
+- Maximum scores saved locally in your browser (localStorage)
+- Share your best scores as a beautiful image (Canvas API)
 - Fully responsive for all devices
 - No external tracking or analytics
-- Fast and lightweight
+- Fast and lightweight (~5KB bundle)
 
 ## Tech Stack
 
-- [Vue 3](https://vuejs.org/) with Composition API
-- [Vite](https://vite.dev/) for blazing fast development
-- Modern CSS with CSS Variables
-- LocalStorage for persistent data
+- [Astro](https://astro.build/) - Static site generator with zero JavaScript by default
+- [TypeScript](https://www.typescriptlang.org/) - Type-safe scripting
+- Modern CSS with CSS Variables for theming
+- localStorage for persistent score data
+- Native Canvas API for image generation
+
+## Project Structure
+
+```
+src/
+├── components/
+│   ├── CPSCounter.astro     # Main CPS tracking logic
+│   ├── CounterCard.astro    # Reusable counter display
+│   ├── ScrollCard.astro     # Scroll tracking display
+│   ├── ActionButtons.astro  # Share and reset buttons
+│   └── Footer.astro         # GitHub link with tooltip
+├── layouts/
+│   └── Layout.astro         # Base HTML layout with global styles
+└── pages/
+    └── index.astro          # Main entry page
+public/
+├── logo.svg                 # App logo
+├── github_logo.svg          # GitHub icon for footer
+├── favicon.ico              # Browser favicon
+└── site.webmanifest         # PWA manifest
+```
 
 ## Getting Started
 
@@ -38,9 +60,16 @@ npm run dev
 ## Build
 
 ```bash
-npm run build
-npm run preview
+npm run build     # Generate static files in dist/
+npm run preview   # Preview production build locally
 ```
+
+## How It Works
+
+1. **CPS Calculation**: Uses a 1-second sliding window to track clicks via `performance.now()` timestamps
+2. **Score Persistence**: Max scores are stored in localStorage with key `cps-counter-max-scores`
+3. **Image Sharing**: Canvas API draws a custom image with scores, copied to clipboard or downloaded
+4. **Interactive Exclusion**: Buttons and links are excluded from click counting via `isInteractiveElement()` check
 
 ## Contributing
 
