@@ -17,7 +17,7 @@
 - Share your best scores as a beautiful image (Canvas API)
 - Fully responsive for all devices
 - No external tracking or analytics
-- Fast and lightweight (~5KB bundle)
+- Fast and lightweight
 
 ## Tech Stack
 
@@ -60,8 +60,8 @@ npm run dev
 ## Build
 
 ```bash
-npm run build     # Generate static files in dist/
-npm run preview   # Preview production build locally
+npm run build    # Generate static files in dist/
+npm run preview  # Preview production build locally
 ```
 
 ## How It Works
@@ -77,4 +77,4 @@ Contributions are welcome! Feel free to [open an issue](https://github.com/henri
 
 ## License
 
-[GNU General Public License v3.0](LICENSE)
+MIT License. See [LICENSE](LICENSE) file for details.
