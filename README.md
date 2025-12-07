@@ -32,20 +32,20 @@
 ```
 src/
 ├── components/
-│   ├── CPSCounter.astro     # Main CPS tracking logic
-│   ├── CounterCard.astro    # Reusable counter display
-│   ├── ScrollCard.astro     # Scroll tracking display
-│   ├── ActionButtons.astro  # Share and reset buttons
-│   └── Footer.astro         # GitHub link with tooltip
+│   ├── CPSCounter.astro         # Main CPS tracking logic
+│   ├── CounterCard.astro        # Reusable counter display
+│   ├── ScrollCard.astro         # Scroll tracking display
+│   ├── ActionButtons.astro      # Share and reset buttons
+│   └── Footer.astro             # GitHub link with tooltip
 ├── layouts/
-│   └── Layout.astro         # Base HTML layout with global styles
+│   └── Layout.astro             # Base HTML layout with global styles
 └── pages/
-    └── index.astro          # Main entry page
+    └── index.astro              # Main entry page
 public/
-├── logo.svg                 # App logo
-├── github_logo.svg          # GitHub icon for footer
-├── favicon.ico              # Browser favicon
-└── site.webmanifest         # PWA manifest
+├── logo.svg                     # App logo
+├── github_logo.svg              # GitHub icon for footer
+├── favicon.ico                  # Browser favicon
+└── site.webmanifest             # PWA manifest
 ```
 
 ## Getting Started
