@@ -1,11 +1,4 @@
 ---
-/**
- * CounterCard - Reusable component for displaying CPS values
- * @prop id - Unique identifier used for DOM element IDs (e.g., "left", "right", "total")
- * @prop label - Display label below the CPS value
- * @prop size - "normal" or "large" (affects font size and min-height)
- * @prop variant - Visual variant ("total" has gradient background)
- */
 interface Props {
   id: string;
   label: string;
@@ -31,6 +24,8 @@ const { id, label, size = "normal", variant = "default" } = Astro.props;
 <style>
   .counter-card {
     background: var(--bg-secondary);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
     border: 1px solid var(--border-color);
     border-radius: var(--radius);
     padding: 1.5rem;
@@ -41,67 +36,97 @@ const { id, label, size = "normal", variant = "default" } = Astro.props;
     gap: 0.5rem;
     transition: all var(--transition);
     min-height: 160px;
+    box-shadow: var(--shadow);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .counter-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+    opacity: 0.8;
+  }
+
+  .counter-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(255, 255, 255, 0.15);
   }
 
   .counter-card:active {
     background: var(--bg-hover);
-    transform: scale(0.98);
+    transform: translateY(2px) scale(0.98);
   }
 
   .cps-value {
     display: flex;
     align-items: baseline;
     gap: 0.5rem;
+    position: relative;
+    z-index: 1;
   }
 
   .number {
-    font-size: 3rem;
+    font-size: 3.5rem;
     font-weight: 700;
     font-variant-numeric: tabular-nums;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.03em;
     line-height: 1;
+    background: linear-gradient(180deg, #ffffff 0%, #a1a1aa 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
   }
 
   .unit {
     font-size: 1rem;
-    font-weight: 500;
+    font-weight: 600;
     color: var(--text-secondary);
     text-transform: uppercase;
     letter-spacing: 0.05em;
   }
 
   .label {
-    font-size: 0.75rem;
+    font-size: 0.8rem;
     font-weight: 600;
     color: var(--text-muted);
     text-transform: uppercase;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.15em;
+    z-index: 1;
   }
 
   .max-value {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    margin-top: 0.25rem;
+    margin-top: 0.5rem;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 0.25rem 0.75rem;
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,0.05);
+    z-index: 1;
   }
 
   .max-label {
     font-size: 0.625rem;
-    font-weight: 600;
+    font-weight: 700;
     color: var(--accent-red);
     letter-spacing: 0.1em;
-    opacity: 0.8;
   }
 
   .max-number {
     font-size: 0.875rem;
-    font-weight: 600;
-    color: var(--accent-red);
+    font-weight: 700;
+    color: var(--text-primary);
     font-variant-numeric: tabular-nums;
   }
 
   .size-large .number {
-    font-size: 4rem;
+    font-size: 4.5rem;
   }
 
   .size-large {
@@ -110,10 +135,30 @@ const { id, label, size = "normal", variant = "default" } = Astro.props;
 
   .variant-total {
     background: linear-gradient(
-      135deg,
-      var(--bg-secondary) 0%,
-      var(--bg-tertiary) 100%
+      145deg,
+      rgba(40, 40, 40, 0.8) 0%,
+      rgba(20, 20, 20, 0.9) 100%
     );
+    border-color: rgba(255, 255, 255, 0.12);
+  }
+
+  .variant-total::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    box-shadow: inset 0 0 40px rgba(59, 130, 246, 0.05);
+    border-radius: inherit;
+    pointer-events: none;
+  }
+
+  .variant-total .number {
+    background: linear-gradient(180deg, #ffffff 0%, #60a5fa 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .variant-total .max-label {
+    color: var(--accent-blue);
   }
 
   @media (max-width: 600px) {
@@ -123,11 +168,11 @@ const { id, label, size = "normal", variant = "default" } = Astro.props;
     }
 
     .number {
-      font-size: 2.5rem;
+      font-size: 3rem;
     }
 
     .size-large .number {
-      font-size: 3rem;
+      font-size: 3.5rem;
     }
 
     .size-large {

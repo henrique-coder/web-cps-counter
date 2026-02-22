@@ -1,9 +1,4 @@
 ---
-/**
- * CPSCounter - Main CPS tracking component
- * Handles all click/scroll event capture, CPS calculation, and UI updates
- * Uses a 1-second sliding window algorithm for real-time CPS measurement
- */
 import CounterCard from "./CounterCard.astro";
 import ScrollCard from "./ScrollCard.astro";
 import ActionButtons from "./ActionButtons.astro";
@@ -94,14 +89,9 @@ import Footer from "./Footer.astro";
   }
 </style>
 
-<script>
-  // === Configuration ===
-  /** Sliding window size in milliseconds for CPS calculation */
-  const WINDOW_SIZE = 1000;
-  /** localStorage key for persisting max scores */
+<script lang="ts">
   const STORAGE_KEY = "cps-counter-max-scores";
 
-  // === Type Definitions ===
   interface ClickWindows {
     left: number[];
     right: number[];
@@ -120,19 +110,10 @@ import Footer from "./Footer.astro";
     total: number;
   }
 
-  // === State ===
-  /** Stores timestamps for each click type within the sliding window */
   const clickWindows: ClickWindows = { left: [], right: [], scroll: [] };
-  /** Stores recent scroll events for speed calculation (100ms window) */
   const scrollEvents: ScrollEvent[] = [];
-  /** Tracks last scroll direction for UI indicator */
   let lastScrollDelta = 0;
 
-  // === LocalStorage Functions ===
-  /**
-   * Loads max scores from localStorage
-   * Returns default scores if not found or parsing fails
-   */
   function loadMaxScores(): MaxScores {
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
@@ -143,18 +124,12 @@ import Footer from "./Footer.astro";
 
   const max = loadMaxScores();
 
-  /** Persists current max scores to localStorage */
   function saveMaxScores() {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(max));
     } catch {}
   }
 
-  /**
-   * Updates max score if new value is higher
-   * @param type - Score category (left, right, scroll, total)
-   * @param value - Current CPS value to compare
-   */
   function updateMax(type: keyof MaxScores, value: number) {
     if (value > max[type]) {
       max[type] = parseFloat(value.toFixed(1));
@@ -162,35 +137,20 @@ import Footer from "./Footer.astro";
     }
   }
 
-  // === CPS Calculation ===
-  /**
-   * Calculates clicks per second using sliding window algorithm
-   * Removes expired timestamps (older than WINDOW_SIZE) and returns count
-   * @param clicks - Array of click timestamps in milliseconds
-   * @returns Number of clicks in the current window
-   */
   function calculateCPS(clicks: number[]): number {
     const now = performance.now();
-    // Remove expired timestamps from the beginning of the array
     while (clicks.length > 0 && now - clicks[0] > WINDOW_SIZE) {
       clicks.shift();
     }
     return clicks.length;
   }
 
-  /**
-   * Calculates scroll speed in pixels per second
-   * Uses a 100ms window for smooth speed calculation
-   * @returns Scroll speed in px/s
-   */
   function calculateScrollSpeed(): number {
     const now = performance.now();
-    // Clean up old scroll events (keep only last 100ms)
     while (scrollEvents.length > 0 && now - scrollEvents[0].timestamp > 100) {
       scrollEvents.shift();
     }
     if (scrollEvents.length < 2) return 0;
-    // Sum absolute deltas and extrapolate to 1 second
     const totalDelta = scrollEvents.reduce(
       (sum, event) => sum + Math.abs(event.delta),
       0
@@ -198,27 +158,15 @@ import Footer from "./Footer.astro";
     return Math.round(totalDelta * (1000 / 100));
   }
 
-  // === Event Handling ===
-  /**
-   * Checks if an element is interactive (should not count as click)
-   * Prevents buttons and links from being counted as CPS clicks
-   * @param element - DOM element to check
-   * @returns True if element is interactive
-   */
   function isInteractiveElement(element: Element | null): boolean {
     if (!element) return false;
     const tag = element.tagName?.toLowerCase();
     if (tag === "button" || tag === "a") return true;
-    // Check if element is inside interactive containers
     if ((element as HTMLElement).closest("button, a, .action-buttons, .footer"))
       return true;
     return false;
   }
 
-  /**
-   * Handles mouse down events for click tracking
-   * Button 0 = left, 1 = middle (scroll), 2 = right
-   */
   function handleMouseDown(event: MouseEvent) {
     if (isInteractiveElement(event.target as Element)) return;
     const timestamp = performance.now();
@@ -231,7 +179,6 @@ import Footer from "./Footer.astro";
     }
   }
 
-  /** Handles wheel events for scroll tracking */
   function handleWheel(event: WheelEvent) {
     const timestamp = performance.now();
     clickWindows.scroll.push(timestamp);
@@ -239,65 +186,95 @@ import Footer from "./Footer.astro";
     lastScrollDelta = event.deltaY;
   }
 
-  // === Display Update ===
-  /**
-   * Updates all DOM elements with current CPS values
-   * Uses requestAnimationFrame for smooth 60fps updates
-   */
+  const leftEl = document.getElementById("left-cps");
+  const rightEl = document.getElementById("right-cps");
+  const totalEl = document.getElementById("total-cps");
+  const scrollEl = document.getElementById("scroll-cps");
+  const speedEl = document.getElementById("scroll-speed");
+  const dirEl = document.getElementById("scroll-direction");
+
+  const leftMaxEl = document.getElementById("left-max");
+  const rightMaxEl = document.getElementById("right-max");
+  const totalMaxEl = document.getElementById("total-max");
+  const scrollMaxEl = document.getElementById("scroll-max");
+
+  let lastValues = {
+    left: -1, right: -1, total: -1, scroll: -1, speed: -1,
+    leftMax: -1, rightMax: -1, totalMax: -1, scrollMax: -1,
+    dirStr: "", dirClass: ""
+  };
+
   function updateDisplay() {
-    // Calculate current CPS for each category
     const leftCPS = calculateCPS(clickWindows.left);
     const rightCPS = calculateCPS(clickWindows.right);
     const scrollCPS = calculateCPS(clickWindows.scroll);
     const totalCPS = leftCPS + rightCPS;
     const scrollSpeed = calculateScrollSpeed();
 
-    // Update max scores if current values are higher
     updateMax("left", leftCPS);
     updateMax("right", rightCPS);
     updateMax("scroll", scrollCPS);
     updateMax("total", totalCPS);
 
-    const leftEl = document.getElementById("left-cps");
-    const rightEl = document.getElementById("right-cps");
-    const totalEl = document.getElementById("total-cps");
-    const scrollEl = document.getElementById("scroll-cps");
-    const speedEl = document.getElementById("scroll-speed");
-    const dirEl = document.getElementById("scroll-direction");
+    if (leftEl && leftCPS !== lastValues.left) {
+      leftEl.textContent = leftCPS.toFixed(1);
+      lastValues.left = leftCPS;
+    }
+    if (rightEl && rightCPS !== lastValues.right) {
+      rightEl.textContent = rightCPS.toFixed(1);
+      lastValues.right = rightCPS;
+    }
+    if (totalEl && totalCPS !== lastValues.total) {
+      totalEl.textContent = totalCPS.toFixed(1);
+      lastValues.total = totalCPS;
+    }
+    if (scrollEl && scrollCPS !== lastValues.scroll) {
+      scrollEl.textContent = scrollCPS.toFixed(1);
+      lastValues.scroll = scrollCPS;
+    }
+    if (speedEl && scrollSpeed !== lastValues.speed) {
+      speedEl.textContent = `${scrollSpeed} px/s`;
+      lastValues.speed = scrollSpeed;
+    }
 
-    const leftMaxEl = document.getElementById("left-max");
-    const rightMaxEl = document.getElementById("right-max");
-    const totalMaxEl = document.getElementById("total-max");
-    const scrollMaxEl = document.getElementById("scroll-max");
-
-    if (leftEl) leftEl.textContent = leftCPS.toFixed(1);
-    if (rightEl) rightEl.textContent = rightCPS.toFixed(1);
-    if (totalEl) totalEl.textContent = totalCPS.toFixed(1);
-    if (scrollEl) scrollEl.textContent = scrollCPS.toFixed(1);
-    if (speedEl) speedEl.textContent = `${scrollSpeed} px/s`;
-
-    if (leftMaxEl) leftMaxEl.textContent = max.left.toFixed(1);
-    if (rightMaxEl) rightMaxEl.textContent = max.right.toFixed(1);
-    if (totalMaxEl) totalMaxEl.textContent = max.total.toFixed(1);
-    if (scrollMaxEl) scrollMaxEl.textContent = max.scroll.toFixed(1);
+    if (leftMaxEl && max.left !== lastValues.leftMax) {
+      leftMaxEl.textContent = max.left.toFixed(1);
+      lastValues.leftMax = max.left;
+    }
+    if (rightMaxEl && max.right !== lastValues.rightMax) {
+      rightMaxEl.textContent = max.right.toFixed(1);
+      lastValues.rightMax = max.right;
+    }
+    if (totalMaxEl && max.total !== lastValues.totalMax) {
+      totalMaxEl.textContent = max.total.toFixed(1);
+      lastValues.totalMax = max.total;
+    }
+    if (scrollMaxEl && max.scroll !== lastValues.scrollMax) {
+      scrollMaxEl.textContent = max.scroll.toFixed(1);
+      lastValues.scrollMax = max.scroll;
+    }
 
     if (dirEl) {
+      let dirStr = "―";
+      let dirClass = "scroll-direction neutral";
       if (lastScrollDelta > 0) {
-        dirEl.textContent = "↓";
-        dirEl.className = "scroll-direction down";
+        dirStr = "↓";
+        dirClass = "scroll-direction down";
       } else if (lastScrollDelta < 0) {
-        dirEl.textContent = "↑";
-        dirEl.className = "scroll-direction up";
-      } else {
-        dirEl.textContent = "―";
-        dirEl.className = "scroll-direction neutral";
+        dirStr = "↑";
+        dirClass = "scroll-direction up";
+      }
+
+      if (dirStr !== lastValues.dirStr) {
+        dirEl.textContent = dirStr;
+        dirEl.className = dirClass;
+        lastValues.dirStr = dirStr;
       }
     }
 
     requestAnimationFrame(updateDisplay);
   }
 
-  /** Resets all max scores to zero */
   function resetMax() {
     max.left = 0;
     max.right = 0;
@@ -306,18 +283,11 @@ import Footer from "./Footer.astro";
     saveMaxScores();
   }
 
-  // === Screenshot Generation ===
-  /**
-   * Generates a shareable image using Canvas API
-   * Draws a custom card with all max scores and copies to clipboard
-   * Falls back to file download if clipboard API is unavailable
-   */
   async function captureScreen() {
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    // High DPI scaling for crisp images
     const scale = 2;
     const width = 600;
     const height = 360;
@@ -326,12 +296,10 @@ import Footer from "./Footer.astro";
     canvas.height = height * scale;
     ctx.scale(scale, scale);
 
-    // Background gradient
     const gradient = ctx.createLinearGradient(0, 0, width, height);
     gradient.addColorStop(0, "#0f0f0f");
     gradient.addColorStop(1, "#0a0a0a");
 
-    // Draw rounded rectangle background
     const radius = 24;
     ctx.beginPath();
     ctx.moveTo(radius, 0);
@@ -431,7 +399,6 @@ import Footer from "./Footer.astro";
       height - 20
     );
 
-    // Convert canvas to blob
     const blob = await new Promise<Blob | null>((resolve) =>
       canvas.toBlob(resolve, "image/png")
     );
@@ -440,14 +407,12 @@ import Footer from "./Footer.astro";
 
     const captureBtn = document.getElementById("capture-btn");
 
-    // Try clipboard API first, fallback to file download
     try {
       await navigator.clipboard.write([
         new ClipboardItem({ "image/png": blob }),
       ]);
       captureBtn?.classList.add("success");
     } catch {
-      // Fallback: trigger file download
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
@@ -457,25 +422,19 @@ import Footer from "./Footer.astro";
       captureBtn?.classList.add("success");
     }
 
-    // Reset button state after 2 seconds
     setTimeout(() => {
       captureBtn?.classList.remove("success");
     }, 2000);
   }
 
-  // === Event Listeners ===
-  // Passive listeners for better scroll performance
   document.addEventListener("mousedown", handleMouseDown, { passive: true });
   document.addEventListener("wheel", handleWheel, { passive: true });
 
-  // Start the animation loop
   requestAnimationFrame(updateDisplay);
 
-  // Button event bindings
   document.getElementById("capture-btn")?.addEventListener("click", captureScreen);
   document.getElementById("reset-btn")?.addEventListener("click", resetMax);
 
-  // Expose functions globally for potential external access
   (window as any).resetMax = resetMax;
   (window as any).captureScreen = captureScreen;
 </script>

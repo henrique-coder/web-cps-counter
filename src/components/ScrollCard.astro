@@ -1,9 +1,4 @@
 ---
-/**
- * ScrollCard - Displays scroll wheel tracking metrics
- * Shows CPS, direction indicator (↑/↓/―), and scroll speed in px/s
- * DOM IDs: scroll-cps, scroll-direction, scroll-speed, scroll-max
- */
 ---
 
 <div class="scroll-card">
@@ -25,6 +20,8 @@
 <style>
   .scroll-card {
     background: var(--bg-secondary);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
     border: 1px solid var(--border-color);
     border-radius: var(--radius);
     padding: 1.25rem;
@@ -34,12 +31,26 @@
     justify-content: center;
     gap: 0.375rem;
     transition: all var(--transition);
+    position: relative;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+  }
+
+  .scroll-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
   }
 
   .scroll-main {
     display: flex;
     align-items: center;
     gap: 1rem;
+    z-index: 1;
   }
 
   .cps-value {
@@ -49,16 +60,20 @@
   }
 
   .number {
-    font-size: 2rem;
+    font-size: 2.25rem;
     font-weight: 700;
     font-variant-numeric: tabular-nums;
     letter-spacing: -0.02em;
     line-height: 1;
+    background: linear-gradient(180deg, #ffffff 0%, #a1a1aa 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
   }
 
   .unit {
     font-size: 0.75rem;
-    font-weight: 500;
+    font-weight: 600;
     color: var(--text-secondary);
     text-transform: uppercase;
     letter-spacing: 0.05em;
@@ -66,16 +81,19 @@
 
   .scroll-direction {
     font-size: 1.5rem;
-    font-weight: 600;
-    transition: color var(--transition);
+    font-weight: 700;
+    transition: all var(--transition);
+    text-shadow: 0 0 10px rgba(0,0,0,0.5);
   }
 
   .scroll-direction.up {
     color: var(--accent-green);
+    text-shadow: 0 0 12px var(--accent-green-glow);
   }
 
   .scroll-direction.down {
     color: var(--accent-red);
+    text-shadow: 0 0 12px var(--accent-red-glow);
   }
 
   .scroll-direction.neutral {
@@ -84,37 +102,49 @@
 
   .scroll-speed {
     font-size: 0.875rem;
-    font-weight: 500;
+    font-weight: 600;
     color: var(--accent-blue);
     font-variant-numeric: tabular-nums;
+    background: rgba(59, 130, 246, 0.1);
+    padding: 0.1rem 0.6rem;
+    border-radius: 999px;
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    z-index: 1;
+    margin: 0.25rem 0;
   }
 
   .label {
-    font-size: 0.75rem;
+    font-size: 0.8rem;
     font-weight: 600;
     color: var(--text-muted);
     text-transform: uppercase;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.15em;
+    z-index: 1;
   }
 
   .max-value {
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 0.25rem 0.75rem;
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,0.05);
+    z-index: 1;
+    margin-top: 0.25rem;
   }
 
   .max-label {
     font-size: 0.625rem;
-    font-weight: 600;
-    color: var(--accent-red);
+    font-weight: 700;
+    color: var(--accent-blue);
     letter-spacing: 0.1em;
-    opacity: 0.8;
   }
 
   .max-number {
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: var(--accent-red);
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--text-primary);
     font-variant-numeric: tabular-nums;
   }
 
@@ -124,7 +154,7 @@
     }
 
     .number {
-      font-size: 1.75rem;
+      font-size: 2rem;
     }
   }
 </style>
