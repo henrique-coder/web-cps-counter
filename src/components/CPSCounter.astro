@@ -89,32 +89,15 @@ import Footer from "./Footer.astro";
   }
 </style>
 
-<script lang="ts">
+<script>
+  const WINDOW_SIZE = 1000;
   const STORAGE_KEY = "cps-counter-max-scores";
 
-  interface ClickWindows {
-    left: number[];
-    right: number[];
-    scroll: number[];
-  }
-
-  interface ScrollEvent {
-    timestamp: number;
-    delta: number;
-  }
-
-  interface MaxScores {
-    left: number;
-    right: number;
-    scroll: number;
-    total: number;
-  }
-
-  const clickWindows: ClickWindows = { left: [], right: [], scroll: [] };
-  const scrollEvents: ScrollEvent[] = [];
+  const clickWindows = { left: [], right: [], scroll: [] };
+  const scrollEvents = [];
   let lastScrollDelta = 0;
 
-  function loadMaxScores(): MaxScores {
+  function loadMaxScores() {
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
       if (stored) return JSON.parse(stored);
@@ -130,14 +113,14 @@ import Footer from "./Footer.astro";
     } catch {}
   }
 
-  function updateMax(type: keyof MaxScores, value: number) {
+  function updateMax(type, value) {
     if (value > max[type]) {
       max[type] = parseFloat(value.toFixed(1));
       saveMaxScores();
     }
   }
 
-  function calculateCPS(clicks: number[]): number {
+  function calculateCPS(clicks) {
     const now = performance.now();
     while (clicks.length > 0 && now - clicks[0] > WINDOW_SIZE) {
       clicks.shift();
@@ -145,7 +128,7 @@ import Footer from "./Footer.astro";
     return clicks.length;
   }
 
-  function calculateScrollSpeed(): number {
+  function calculateScrollSpeed() {
     const now = performance.now();
     while (scrollEvents.length > 0 && now - scrollEvents[0].timestamp > 100) {
       scrollEvents.shift();
@@ -158,17 +141,17 @@ import Footer from "./Footer.astro";
     return Math.round(totalDelta * (1000 / 100));
   }
 
-  function isInteractiveElement(element: Element | null): boolean {
+  function isInteractiveElement(element) {
     if (!element) return false;
     const tag = element.tagName?.toLowerCase();
     if (tag === "button" || tag === "a") return true;
-    if ((element as HTMLElement).closest("button, a, .action-buttons, .footer"))
+    if (element.closest && element.closest("button, a, .action-buttons, .footer"))
       return true;
     return false;
   }
 
-  function handleMouseDown(event: MouseEvent) {
-    if (isInteractiveElement(event.target as Element)) return;
+  function handleMouseDown(event) {
+    if (isInteractiveElement(event.target)) return;
     const timestamp = performance.now();
     if (event.button === 0) {
       clickWindows.left.push(timestamp);
@@ -179,7 +162,7 @@ import Footer from "./Footer.astro";
     }
   }
 
-  function handleWheel(event: WheelEvent) {
+  function handleWheel(event) {
     const timestamp = performance.now();
     clickWindows.scroll.push(timestamp);
     scrollEvents.push({ timestamp, delta: event.deltaY });
@@ -399,7 +382,7 @@ import Footer from "./Footer.astro";
       height - 20
     );
 
-    const blob = await new Promise<Blob | null>((resolve) =>
+    const blob = await new Promise((resolve) =>
       canvas.toBlob(resolve, "image/png")
     );
 
@@ -435,6 +418,6 @@ import Footer from "./Footer.astro";
   document.getElementById("capture-btn")?.addEventListener("click", captureScreen);
   document.getElementById("reset-btn")?.addEventListener("click", resetMax);
 
-  (window as any).resetMax = resetMax;
-  (window as any).captureScreen = captureScreen;
+  window.resetMax = resetMax;
+  window.captureScreen = captureScreen;
 </script>
