@@ -9,18 +9,19 @@
     "type": "git",
     "url": "https://github.com/henrique-coder/cps-counter"
   },
+  "packageManager": "pnpm@11.9.0",
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview"
   },
   "dependencies": {
-    "astro": "^6.3.3"
+    "astro": "^7.0.2"
   },
   "devDependencies": {
-    "eslint": "^10.4.0",
-    "eslint-plugin-astro": "^1.7.0",
-    "prettier": "^3.8.3",
+    "eslint": "^10.5.0",
+    "eslint-plugin-astro": "^2.0.0",
+    "prettier": "^3.8.4",
     "prettier-plugin-astro": "^0.14.1"
   }
 }
